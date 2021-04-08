@@ -1,0 +1,13 @@
+function [newX,Z,dim] = lowrank(LabelMat,dim)
+[U,S,V]=svd(LabelMat);
+line_S = diag(S);
+U = U(:,1:dim);
+S = diag(line_S(1:dim));
+V = V(:,1:dim);
+X = U*sqrt(S);
+Z = V*sqrt(S);
+X = mapminmax(X,0,1);
+minx = min(X,[],2);
+maxx=max(X,[],2);
+newX = X-repmat(minx,1,dim);
+Z = mapminmax(Z,0,1);

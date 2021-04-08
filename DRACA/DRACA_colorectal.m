@@ -1,0 +1,40 @@
+funspath=['../data/mat_file'];
+%%%This part of the work is partially cited with "Matrix factorization-based data fusion for the prediction of lncRNA-disease associations".
+addpath(funspath);
+%% load data to construct the relation matrix R
+load('lncrna_gene')
+R13=lncrna_gene;
+load('lncrna_mirna')
+R12=lncrna_mirna;
+load('lncrna_cancer')
+R14=lncrna_cancer;
+load('mirna_gene')
+R23=mirna_gene;
+load('mirna_cancer')
+R24=mirna_cancer;
+load('gene_cancer')
+R34=gene_cancer;
+load('gene_prognosis')
+R35=gene_prognosis;
+Rcell={R12,R13,R14,R23,R24,R34,R35};
+k1=1679;
+k2=1610;
+k3=710;
+k4=3;
+k5=3;
+R1=[R12,R13];
+R2=[R12',R23,R24];
+R3=[R13',R23',R34,R35];
+R4=[R24',R34'];
+[G1,z1]=lowrank(R1,k1);
+[G2,z2]=lowrank(R2,k2);
+[G3,z3]=lowrank(R3,k3);
+[G4,z4]=lowrank(R4,k4);
+[G5,z5]=lowrank(R35',k5);
+Gcell={G1,G2,G3,G4,G5};
+instanseIdx={6,7,8,12,13,18,19};
+fprintf('begin,time:%s\n',datestr(now));
+t0=clock;
+nTypes=5;
+pre = DRACA_Demo(nTypes,instanseIdx,Gcell,Rcell);
+dlmwrite('../colorectal_score.csv',pre(1:1679,3));
