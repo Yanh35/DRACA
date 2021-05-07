@@ -1,3 +1,0 @@
-breast cancer
-lung cancer
-colorectal cancer
